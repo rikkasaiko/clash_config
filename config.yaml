@@ -1,0 +1,393 @@
+
+# url 里填写自己的订阅,名称不能重复
+proxy-providers:
+  provider1:
+    url: "your url" # 你的订阅地址
+    type: http
+    interval: 1800 # 更新间隔 单位秒
+    health-check: {enable: true,url: "https://www.gstatic.com/generate_204", interval: 100} # 健康检查 单位秒
+    override:
+      additional-prefix: "[your prefix]" # 节点前缀
+
+  provider2:
+    url: "your url"
+    type: http
+    interval: 1800
+    health-check: {enable: true,url: "https://www.gstatic.com/generate_204",interval: 100}
+    override:
+      additional-prefix: "[your prefix]"
+  provider3:
+    url: "your url"
+    type: http
+    interval: 1800
+    health-check: {enable: true,url: "https://www.gstatic.com/generate_204",interval: 100}
+    override:
+    additional-prefix: "[your prefix]"
+
+
+proxies: 
+  - name: "直连"
+    type: direct
+    udp: true
+
+
+
+mode: rule
+mixed-port: 7897
+allow-lan: true
+log-level: info
+external-controller: 127.0.0.1:9090
+# secret: '' # webui秘钥
+unified-delay: true
+geodata-mode: true
+geo-auto-update: true
+geox-url:
+  geoip: https://fastgh.lainbo.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat
+  geosite: https://fastgh.lainbo.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat
+  mmdb: https://fastgh.lainbo.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb
+external-controller-cors:
+  allow-private-network: true
+  allow-origins:
+  - '*'
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports:
+      - 80
+      - 8080-8880
+      override-destination: true
+    TLS:
+      ports:
+      - 443
+      - 8443
+    QUIC:
+      ports:
+      - 443
+      - 8443
+geo-update-interval: 24
+geodata-loader: standard
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+# tun
+tun:
+  auto-detect-interface: true
+  auto-route: true
+  device: Mihomo
+  dns-hijack:
+  - any:53
+  mtu: 1500
+  stack: mixed
+  strict-route: true
+  enable: true
+bind-address: '*'
+tcp-concurrent: true
+
+# dns
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver:
+  - 180.184.1.1
+  - https://1.12.12.12/dns-query
+  - https://119.29.29.29/dns-query
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  nameserver:
+  - https://doh.pub/dns-query
+  - https://dns.alidns.com/dns-query
+  fallback:
+  - https://doh.dns.sb/dns-query
+  - https://dns.cloudflare.com/dns-query
+  - https://dns.twnic.tw/dns-query
+  - tls://8.8.4.4:853
+  fallback-filter:
+    geoip: true
+    ipcidr:
+    - 240.0.0.0/4
+    - 0.0.0.0/32
+  prefer-h3: true
+  nameserver-policy:
+    http-inputs-notion.splunkcloud.com,+.notion-static.com,+.notion.com,+.notion.new,+.notion.site,+.notion.so: tls://dns.jerryw.cn
+    geosite:geolocation-!cn:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+    - 180.184.1.1
+    nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+    - 180.184.1.1
+
+
+proxy-groups:
+- interval: 300 # 更新间隔 单位秒
+  timeout: 3000 # 超时时间 单位毫秒
+  url: https://www.google.com/generate_204
+  lazy: true # 延迟加载
+  max-failed-times: 3 # 最大失败次数
+  hidden: false # 是否隐藏
+  name: 节点选择
+  type: select
+  proxies:
+  - 延迟选优
+  - 香港节点
+  - 日本节点
+  - 新加坡节点
+  - 美国节点
+  - 韩国节点
+  - 台湾节点
+  - 全球节点
+  icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 延迟选优
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: 🇭🇰|🇯🇵|🇺🇸|🇸🇬|🇨🇳|港|hk|hongkong|台|tw|taiwan|日|jp|japan|新|sg|singapore|美|us|unitedstates|🇰🇷|韩国|韓|首尔|KR|Korea
+  icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/speed.svg
+- interval: 300
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 谷歌服务
+  type: select
+  proxies:
+  - 韩国节点
+  - 新加坡节点
+  - 美国节点
+  - 日本节点
+  - 全球节点
+  icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 香港节点
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: 🇭🇰|香港|HK|Hong
+  icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 日本节点
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: 🇯🇵|日本|川日|东京|大阪|泉日|埼玉|JP|Japan
+  icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 新加坡节点
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: 🇸🇬|新加坡|狮|SG|Singapore
+  icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 美国节点
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: 🇺🇸|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States
+  icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 韩国节点
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: 🇰🇷|韩国|韓|首尔|KR|Korea
+  icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Korea.png
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 台湾节点
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: 🇹🇼|台湾|TW|Tai|Taiwan
+  icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Taiwan.png
+- interval: 60
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 全球节点
+  type: url-test
+  tolerance: 50
+  include-all: true
+  filter: (?i)^(?!.*(?:🇭🇰|🇯🇵|🇺🇸|🇸🇬|🇨🇳|港|hk|hongkong|台|tw|taiwan|日|jp|japan|新|sg|singapore|美|us|unitedstates|🇰🇷|韩国|韓|首尔|KR|Korea)).*
+  icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png
+- interval: 300
+  timeout: 3000
+  url: https://www.google.com/generate_204
+  lazy: true
+  max-failed-times: 3
+  hidden: false
+  name: 漏网之鱼
+  type: select
+  proxies:
+  - 延迟选优
+  - 香港节点
+  - 日本节点
+  - 新加坡节点
+  - 美国节点
+  - 韩国节点
+  - 台湾节点
+  - 全球节点
+  icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg
+rule-providers:
+  reject:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
+    path: ./ruleset/loyalsoldier/reject.yaml
+  icloud:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
+    path: ./ruleset/loyalsoldier/icloud.yaml
+  apple:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
+    path: ./ruleset/loyalsoldier/apple.yaml
+  google:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
+    path: ./ruleset/loyalsoldier/google.yaml
+  proxy:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
+    path: ./ruleset/loyalsoldier/proxy.yaml
+  direct:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    path: ./ruleset/loyalsoldier/direct.yaml
+  private:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
+    path: ./ruleset/loyalsoldier/private.yaml
+  gfw:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
+    path: ./ruleset/loyalsoldier/gfw.yaml
+  tld-not-cn:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: domain
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
+    path: ./ruleset/loyalsoldier/tld-not-cn.yaml
+  telegramcidr:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: ipcidr
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    path: ./ruleset/loyalsoldier/telegramcidr.yaml
+  cncidr:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: ipcidr
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+    path: ./ruleset/loyalsoldier/cncidr.yaml
+  lancidr:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: ipcidr
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
+    path: ./ruleset/loyalsoldier/lancidr.yaml
+  applications:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: classical
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt
+    path: ./ruleset/loyalsoldier/applications.yaml
+  openai:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: classical
+    url: https://fastly.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OpenAI/OpenAI.yaml
+    path: ./ruleset/blackmatrix7/openai.yaml
+rules:
+- DOMAIN-REGEX,rikkasaiko,DIRECT
+- DOMAIN,x.xingct.com,DIRECT
+- DOMAIN-SUFFIX,googleapis.cn,谷歌服务
+- DOMAIN-SUFFIX,gstatic.com,谷歌服务
+- DOMAIN-SUFFIX,xn--ngstr-lra8j.com,谷歌服务
+- DOMAIN-SUFFIX,github.io,节点选择
+- DOMAIN,v2rayse.com,节点选择
+- RULE-SET,applications,DIRECT
+- RULE-SET,private,DIRECT
+- RULE-SET,reject,REJECT
+- RULE-SET,icloud,节点选择
+- RULE-SET,google,谷歌服务
+- RULE-SET,gfw,谷歌服务
+- RULE-SET,tld-not-cn,节点选择
+- RULE-SET,direct,DIRECT
+- RULE-SET,lancidr,DIRECT,no-resolve
+- RULE-SET,cncidr,DIRECT,no-resolve
+- RULE-SET,telegramcidr,延迟选优,no-resolve
+- GEOIP,LAN,DIRECT,no-resolve
+- GEOIP,CN,DIRECT,no-resolve
+- MATCH,漏网之鱼
