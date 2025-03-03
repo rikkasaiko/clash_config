@@ -655,7 +655,7 @@ rules:
 - RULE-SET,HTTPDNS,REJECT
 # 国外媒体
 - RULE-SET,Netflix,延迟选优
-- RULE-SET,YouTube,手动节点
+- RULE-SET,YouTube,节点选择
 # 国内媒体
 - RULE-SET,Bilibili,DIRECT
 - RULE-SET,IQ,DIRECT
@@ -676,9 +676,9 @@ rules:
 - RULE-SET,Google FCM,谷歌服务
 - RULE-SET,Microsoft,延迟选优
 - RULE-SET,AI Suite,谷歌服务
-- RULE-SET,Steam,手动节点
+- RULE-SET,Steam,节点选择
 - RULE-SET,miHoYo,DIRECT
-- RULE-SET,PROXY,手动节点
+- RULE-SET,PROXY,节点选择
 - RULE-SET,Domestic,DIRECT
 - RULE-SET,Domestic IPs,DIRECT
 - RULE-SET,LAN,DIRECT
