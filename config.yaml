@@ -370,8 +370,8 @@ rule-providers:
     url: https://fastly.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OpenAI/OpenAI.yaml
     path: ./ruleset/blackmatrix7/openai.yaml
 rules:
-- DOMAIN-REGEX,rikkasaiko,DIRECT
-- DOMAIN,x.xingct.com,DIRECT
+- DOMAIN-KEYWORD,rikkasaiko,DIRECT
+- DOMAIN-KEYWORD,xingct,DIRECT
 - DOMAIN-SUFFIX,googleapis.cn,谷歌服务
 - DOMAIN-SUFFIX,gstatic.com,谷歌服务
 - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,谷歌服务
